@@ -1,12 +1,817 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>docs-related</title>
-  </head>
-  <body>
-    <h1>docs-related</h1>
-    <p>Welcome to the docs-related GitHub Pages site.</p>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doc Platform Comparison: Mintlify vs Docusaurus vs Zendesk</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap');
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e2a;
+    --border: #252a38;
+    --border-bright: #323848;
+    --text-primary: #e8eaf2;
+    --text-secondary: #8b91a8;
+    --text-muted: #555c72;
+    --full: #22c97a;
+    --full-bg: rgba(34,201,122,0.08);
+    --partial: #f5a623;
+    --partial-bg: rgba(245,166,35,0.08);
+    --none: #e05252;
+    --none-bg: rgba(224,82,82,0.08);
+    --accent: #4e8ef7;
+    --accent-dim: rgba(78,142,247,0.15);
+    --mint: #1aba8c;
+    --docu: #4e8ef7;
+    --zen: #9b6cef;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 40px 24px 80px;
+  }
+
+  .page-header {
+    max-width: 1200px;
+    margin: 0 auto 40px;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+    font-weight: 300;
+    font-size: 15px;
+  }
+
+  .legend {
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+
+  .wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    table-layout: fixed;
+  }
+
+  colgroup col:first-child { width: 30%; }
+  colgroup col:not(:first-child) { width: 23.3%; }
+
+  thead tr {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border-bright);
+  }
+
+  th {
+    padding: 16px 18px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  th:first-child {
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .th-mint { color: var(--mint); }
+  .th-docu { color: var(--docu); }
+  .th-zen  { color: var(--zen); }
+
+  .platform-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .platform-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .section-header td {
+    background: var(--surface2);
+    padding: 8px 18px;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  tbody tr:not(.section-header) {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  tbody tr:not(.section-header):hover {
+    background: rgba(255,255,255,0.02);
+  }
+
+  td {
+    padding: 14px 18px;
+    vertical-align: top;
+  }
+
+  .feature-name {
+    color: var(--text-primary);
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .feature-note {
+    display: block;
+    color: var(--text-muted);
+    font-size: 11.5px;
+    margin-top: 3px;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .cell {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.04em;
+    width: fit-content;
+  }
+
+  .badge-full    { background: var(--full-bg);    color: var(--full);    border: 1px solid rgba(34,201,122,0.2); }
+  .badge-partial { background: var(--partial-bg); color: var(--partial); border: 1px solid rgba(245,166,35,0.2); }
+  .badge-none    { background: var(--none-bg);    color: var(--none);    border: 1px solid rgba(224,82,82,0.2); }
+
+  .badge::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  .note-text {
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  a:hover { text-decoration: underline; }
+
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 4px;
+  }
+
+  .divider-label {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--text-muted);
+    margin-top: 20px;
+    margin-bottom: 4px;
+    padding: 0 18px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .footnote {
+    max-width: 1200px;
+    margin: 24px auto 0;
+    padding: 16px 18px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .footnote strong { color: var(--text-secondary); }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="eyebrow">Documentation Platform Evaluation</div>
+  <h1>Mintlify · Docusaurus · Zensical</h1>
+  <p class="subtitle">Feature support comparison for documentation site requirements</p>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--full)"></div> Full support</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--partial)"></div> Partial support</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--none)"></div> None / not available</div>
+  </div>
+</div>
+
+<div class="wrapper">
+<table>
+<colgroup>
+  <col><col><col><col>
+</colgroup>
+<thead>
+  <tr>
+    <th>Requirement</th>
+    <th><span class="platform-badge th-mint"><span class="platform-dot" style="background:var(--mint)"></span>Mintlify</span></th>
+    <th><span class="platform-badge th-docu"><span class="platform-dot" style="background:var(--docu)"></span>Docusaurus</span></th>
+    <th><span class="platform-badge th-zen"><span class="platform-dot" style="background:var(--zen)"></span>Zensical</span></th>
+  </tr>
+</thead>
+<tbody>
+
+<!-- SECTION: CONTENT ARCHITECTURE -->
+<tr class="section-header"><td colspan="4">Content Architecture &amp; Navigation</td></tr>
+
+<tr>
+  <td><span class="feature-name">Versioning support</span></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Supports versioning via git branches; no built-in multi-version UI switcher like Docusaurus</span>
+    <div class="links"><a href="https://mintlify.com/docs/settings/versioning" target="_blank">↗ mintlify.com/docs/settings/versioning</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">First-class versioning with UI dropdown, per-version sidebars, and full docs lifecycle</span>
+    <div class="links"><a href="https://docusaurus.io/docs/versioning" target="_blank">↗ docusaurus.io/docs/versioning</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-none">None</span>
+    <span class="note-text">No versioning feature documented; product is early-stage</span>
+    <div class="links"><a href="https://zensical.com" target="_blank">↗ zensical.com</a></div>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Version specific pages/sections</span>
+    <span class="feature-note">Ability to version only part of the docs</span>
+  </td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Branch-based approach allows scoping, but not per-page granularity natively</span>
+    <div class="links"><a href="https://mintlify.com/docs/settings/versioning" target="_blank">↗ mintlify.com/docs/settings/versioning</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Versioning is per-docs set; individual page version exclusion requires workarounds</span>
+    <div class="links"><a href="https://docusaurus.io/docs/versioning#tagging-a-new-version" target="_blank">↗ docusaurus.io/docs/versioning</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-none">None</span>
+    <span class="note-text">Not available</span>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Left panel navigation &amp; full viewport layout</span></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Standard left nav with top nav tabs; full-width layout supported</span>
+    <div class="links"><a href="https://mintlify.com/docs/navigation" target="_blank">↗ mintlify.com/docs/navigation</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Sidebar navigation with optional full-width pages via CSS/custom layouts</span>
+    <div class="links"><a href="https://docusaurus.io/docs/sidebar" target="_blank">↗ docusaurus.io/docs/sidebar</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Sidebar present; full viewport layout customization limited</span>
+    <div class="links"><a href="https://zensical.com" target="_blank">↗ zensical.com</a></div>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Flat information architecture</span>
+    <span class="feature-note">Not siloed or forced drilldown</span>
+  </td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Navigation is fully configurable; flat or nested IA both supported</span>
+    <div class="links"><a href="https://mintlify.com/docs/navigation" target="_blank">↗ mintlify.com/docs/navigation</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Sidebar structure is author-controlled; flat architecture easily achievable</span>
+    <div class="links"><a href="https://docusaurus.io/docs/sidebar/items" target="_blank">↗ docusaurus.io/docs/sidebar/items</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Navigation structure has some flexibility but customization is limited</span>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Full pages in multiple TOCs</span>
+    <span class="feature-note">Content reuse across navigation trees</span>
+  </td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Pages can be referenced in multiple nav groups via mint.json config; not true transclusion</span>
+    <div class="links"><a href="https://mintlify.com/docs/navigation" target="_blank">↗ mintlify.com/docs/navigation</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">A single MDX page can appear in multiple sidebar configs; requires manual setup</span>
+    <div class="links"><a href="https://docusaurus.io/docs/sidebar/multiple-sidebars" target="_blank">↗ docusaurus.io/docs/sidebar/multiple-sidebars</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-none">None</span>
+    <span class="note-text">Not documented as a feature</span>
+  </div></td>
+</tr>
+
+<!-- SECTION: AUTHORING -->
+<tr class="section-header"><td colspan="4">Authoring &amp; Content</td></tr>
+
+<tr>
+  <td><span class="feature-name">Support for current Markdown</span>
+    <span class="feature-note">CommonMark, GFM, MDX</span>
+  </td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">MDX supported; GFM extensions; custom Mintlify components via MDX</span>
+    <div class="links"><a href="https://mintlify.com/docs/text" target="_blank">↗ mintlify.com/docs/text</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">MDX 2 with full React support; CommonMark + GFM; remark/rehype plugin ecosystem</span>
+    <div class="links"><a href="https://docusaurus.io/docs/markdown-features" target="_blank">↗ docusaurus.io/docs/markdown-features</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Standard Markdown supported; MDX and GFM extensions not confirmed</span>
+    <div class="links"><a href="https://zensical.com" target="_blank">↗ zensical.com</a></div>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Includes, variables, conditionals</span></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Snippets (reusable content blocks) supported; native conditionals limited; variables via MDX</span>
+    <div class="links"><a href="https://mintlify.com/docs/reusable-snippets" target="_blank">↗ mintlify.com/docs/reusable-snippets</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">MDX enables full JS variables, conditionals, imports; community plugins extend further</span>
+    <div class="links"><a href="https://docusaurus.io/docs/markdown-features/react" target="_blank">↗ docusaurus.io/docs/markdown-features/react</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-none">None</span>
+    <span class="note-text">No includes/variable system documented</span>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Support for .ipynb files</span>
+    <span class="feature-note">Jupyter Notebook rendering</span>
+  </td>
+  <td><div class="cell">
+    <span class="badge badge-none">None</span>
+    <span class="note-text">No native .ipynb support; requires custom MDX workaround</span>
+    <div class="links"><a href="https://mintlify.com/docs/integrations/overview" target="_blank">↗ mintlify.com/docs/integrations</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Community plugin (docusaurus-plugin-notebook) enables .ipynb rendering</span>
+    <div class="links">
+      <a href="https://github.com/sighingnow/docusaurus-plugin-notebook" target="_blank">↗ github: docusaurus-plugin-notebook</a>
+    </div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-none">None</span>
+    <span class="note-text">Not documented</span>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Link redirect support</span></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Built-in redirects via mint.json redirects array</span>
+    <div class="links"><a href="https://mintlify.com/docs/settings/broken-links" target="_blank">↗ mintlify.com/docs/settings/broken-links</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">@docusaurus/plugin-client-redirects; also supported via hosting platform (Netlify, Vercel)</span>
+    <div class="links"><a href="https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-client-redirects" target="_blank">↗ docusaurus.io/docs/…/plugin-client-redirects</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Redirect support depends on hosting configuration; no native built-in confirmed</span>
+  </div></td>
+</tr>
+
+<!-- SECTION: LLM & AI -->
+<tr class="section-header"><td colspan="4">LLM &amp; AI Readiness</td></tr>
+
+<tr>
+  <td><span class="feature-name">Support for LLM consumption</span>
+    <span class="feature-note">Clean, parseable output for AI tools</span>
+  </td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Auto-generates llms.txt and llms-full.txt; purpose-built for AI-readable docs</span>
+    <div class="links"><a href="https://mintlify.com/docs/llms-txt" target="_blank">↗ mintlify.com/docs/llms-txt</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">No native llms.txt; community plugin available; clean HTML output is parseable</span>
+    <div class="links">
+      <a href="https://github.com/rdipietro/docusaurus-llms-txt" target="_blank">↗ github: docusaurus-llms-txt plugin</a>
+    </div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-none">None</span>
+    <span class="note-text">No LLM-specific features documented</span>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">LLM artifact creation</span>
+    <span class="feature-note">llms.txt, sidecar markdown for HTML pages</span>
+  </td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Native llms.txt generation; sidecar .md alongside each HTML page auto-generated</span>
+    <div class="links"><a href="https://mintlify.com/docs/llms-txt" target="_blank">↗ mintlify.com/docs/llms-txt</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Achievable via custom scripts or plugins; not first-class</span>
+    <div class="links"><a href="https://docusaurus.io/docs/docusaurus-core#docusaurus-plugin" target="_blank">↗ docusaurus.io/docs/docusaurus-core</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-none">None</span>
+    <span class="note-text">Not available</span>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Ability to build a doc chatbot</span></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Native AI chat widget (Mintlify Chat) powered by docs content; built-in</span>
+    <div class="links"><a href="https://mintlify.com/docs/settings/ai-chat" target="_blank">↗ mintlify.com/docs/settings/ai-chat</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Integrates with third-party tools (Inkeep, Kapa.ai, etc.); no native chatbot</span>
+    <div class="links"><a href="https://docusaurus.io/community/resources#search" target="_blank">↗ docusaurus.io/community/resources</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-none">None</span>
+    <span class="note-text">Not documented as a feature</span>
+  </div></td>
+</tr>
+
+<!-- SECTION: CUSTOMIZATION -->
+<tr class="section-header"><td colspan="4">Customization &amp; Theming</td></tr>
+
+<tr>
+  <td><span class="feature-name">Selectable theme</span>
+    <span class="feature-note">Light, dark, system</span>
+  </td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Light/dark/system modes; custom color palettes per theme</span>
+    <div class="links"><a href="https://mintlify.com/docs/settings/global" target="_blank">↗ mintlify.com/docs/settings/global</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Light/dark/system toggle; full CSS variable override for custom palettes</span>
+    <div class="links"><a href="https://docusaurus.io/docs/styling-layout#styling-your-site-with-infima" target="_blank">↗ docusaurus.io/docs/styling-layout</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Dark/light mode supported; deep theming customization unclear</span>
+    <div class="links"><a href="https://zensical.com" target="_blank">↗ zensical.com</a></div>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Full extensibility &amp; customization</span></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">MDX components, custom CSS, JS snippets; bounded by managed SaaS platform</span>
+    <div class="links"><a href="https://mintlify.com/docs/advanced/custom-scripts" target="_blank">↗ mintlify.com/docs/advanced/custom-scripts</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Open source; full React component swizzling; plugins; themes; arbitrary JS/CSS</span>
+    <div class="links"><a href="https://docusaurus.io/docs/swizzling" target="_blank">↗ docusaurus.io/docs/swizzling</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Some customization; platform is closed-source SaaS with limited extension points</span>
+  </div></td>
+</tr>
+
+<!-- SECTION: WORKFLOW -->
+<tr class="section-header"><td colspan="4">Workflow &amp; Publishing</td></tr>
+
+<tr>
+  <td><span class="feature-name">Preview from GitHub / staging</span></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">GitHub integration with PR preview deployments; staging URLs per branch</span>
+    <div class="links"><a href="https://mintlify.com/docs/integrations/github" target="_blank">↗ mintlify.com/docs/integrations/github</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Deploy preview via Netlify/Vercel/Cloudflare; local dev server for instant preview</span>
+    <div class="links"><a href="https://docusaurus.io/docs/deployment" target="_blank">↗ docusaurus.io/docs/deployment</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">GitHub sync supported; PR preview deployment not confirmed</span>
+    <div class="links"><a href="https://zensical.com" target="_blank">↗ zensical.com</a></div>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Deployment control / scheduling</span></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Auto-deploys on git push; manual publish from dashboard; no scheduled publishing</span>
+    <div class="links"><a href="https://mintlify.com/docs/integrations/github" target="_blank">↗ mintlify.com/docs/integrations/github</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Self-hosted = full CI/CD control; scheduling via GitHub Actions workflows</span>
+    <div class="links"><a href="https://docusaurus.io/docs/deployment#deploying-to-github-pages" target="_blank">↗ docusaurus.io/docs/deployment</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Deployment managed by platform; scheduling not documented</span>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">PDF export</span></td>
+  <td><div class="cell">
+    <span class="badge badge-none">None</span>
+    <span class="note-text">No built-in PDF export; browser print-to-PDF as workaround</span>
+    <div class="links"><a href="https://mintlify.com/docs" target="_blank">↗ mintlify.com/docs</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Community plugin (docusaurus-prince-pdf, docusaurus-pdf); not first-class</span>
+    <div class="links">
+      <a href="https://github.com/signcl/docusaurus-prince-pdf" target="_blank">↗ github: docusaurus-prince-pdf</a>
+    </div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-none">None</span>
+    <span class="note-text">Not documented</span>
+  </div></td>
+</tr>
+
+<!-- SECTION: FEATURES -->
+<tr class="section-header"><td colspan="4">Developer &amp; User Features</td></tr>
+
+<tr>
+  <td><span class="feature-name">"Try it now" functionality</span>
+    <span class="feature-note">Interactive API / code sandbox</span>
+  </td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Native API playground from OpenAPI spec; interactive code runners</span>
+    <div class="links"><a href="https://mintlify.com/docs/api-playground/overview" target="_blank">↗ mintlify.com/docs/api-playground</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Interactive code via MDX + third-party embeds (CodeSandbox, StackBlitz); no native API playground</span>
+    <div class="links"><a href="https://docusaurus.io/docs/markdown-features/code-blocks#interactive-code-editor" target="_blank">↗ docusaurus.io/docs/…/code-blocks</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-none">None</span>
+    <span class="note-text">Not available</span>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Search</span></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Built-in AI-powered search (Mintlify Search); no external service needed</span>
+    <div class="links"><a href="https://mintlify.com/docs/settings/search" target="_blank">↗ mintlify.com/docs/settings/search</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Algolia DocSearch integration (free for OSS); local search plugin also available</span>
+    <div class="links"><a href="https://docusaurus.io/docs/search" target="_blank">↗ docusaurus.io/docs/search</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Built-in search included</span>
+    <div class="links"><a href="https://zensical.com" target="_blank">↗ zensical.com</a></div>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Analytics</span></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Built-in page analytics dashboard; plus Google Analytics, PostHog, Mixpanel integrations</span>
+    <div class="links"><a href="https://mintlify.com/docs/integrations/analytics" target="_blank">↗ mintlify.com/docs/integrations/analytics</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">No built-in analytics; Google Analytics, GTM, Plausible via plugin</span>
+    <div class="links"><a href="https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-google-analytics" target="_blank">↗ docusaurus.io/docs/…/plugin-google-analytics</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Some analytics; details limited in public docs</span>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Code–repo linkage with change notifications</span></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">GitHub sync; no native code-change notification system</span>
+    <div class="links"><a href="https://mintlify.com/docs/integrations/github" target="_blank">↗ mintlify.com/docs/integrations/github</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Fully git-native; change alerts achievable via GitHub Actions / webhooks; not built-in</span>
+    <div class="links"><a href="https://docusaurus.io/docs/deployment" target="_blank">↗ docusaurus.io/docs/deployment</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-none">None</span>
+    <span class="note-text">Not documented</span>
+  </div></td>
+</tr>
+
+<!-- SECTION: OPEN SOURCE & SUPPORT -->
+<tr class="section-header"><td colspan="4">Open Source, Support &amp; Migration</td></tr>
+
+<tr>
+  <td><span class="feature-name">Open source / user contribution</span></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Closed-source SaaS; "Edit on GitHub" buttons link to source repo for reader contributions</span>
+    <div class="links"><a href="https://mintlify.com/docs/settings/github" target="_blank">↗ mintlify.com/docs/settings/github</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Fully open source (MIT); active community; "Edit this page" on GitHub per page</span>
+    <div class="links"><a href="https://github.com/facebook/docusaurus" target="_blank">↗ github.com/facebook/docusaurus</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-none">None</span>
+    <span class="note-text">Closed-source SaaS; no open source offering</span>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Migration assistance</span></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Migration guides for common platforms; white-glove onboarding on paid plans</span>
+    <div class="links"><a href="https://mintlify.com/docs/migration" target="_blank">↗ mintlify.com/docs/migration</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Community migration guides; no paid migration service; self-serve</span>
+    <div class="links"><a href="https://docusaurus.io/docs/migration" target="_blank">↗ docusaurus.io/docs/migration</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Onboarding assistance offered; formal migration tooling unclear</span>
+    <div class="links"><a href="https://zensical.com" target="_blank">↗ zensical.com</a></div>
+  </div></td>
+</tr>
+
+<tr>
+  <td><span class="feature-name">Technical support</span></td>
+  <td><div class="cell">
+    <span class="badge badge-full">Full</span>
+    <span class="note-text">Dedicated support on Growth/Enterprise plans; Slack community; in-app chat</span>
+    <div class="links"><a href="https://mintlify.com/pricing" target="_blank">↗ mintlify.com/pricing</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Community Discord + GitHub Issues; no paid support tiers (open source project)</span>
+    <div class="links"><a href="https://docusaurus.io/community/support" target="_blank">↗ docusaurus.io/community/support</a></div>
+  </div></td>
+  <td><div class="cell">
+    <span class="badge badge-partial">Partial</span>
+    <span class="note-text">Support offered as part of SaaS; SLA details not public</span>
+    <div class="links"><a href="https://zensical.com" target="_blank">↗ zensical.com</a></div>
+  </div></td>
+</tr>
+
+<!-- SECTION: CUSTOMERS -->
+<tr class="section-header"><td colspan="4">Notable Customers</td></tr>
+
+<tr>
+  <td><span class="feature-name">Who uses it</span>
+    <span class="feature-note">Publicly known customers &amp; showcase sites</span>
+  </td>
+  <td><div class="cell">
+    <span class="note-text">Anthropic, Cursor, Perplexity, Resend, Loops, Flatfile, Dub, Neon, Trigger.dev, Supabase (partial), Raycast, Cal.com, Speakeasy, Vercel (AI SDK docs), Clerk, ElevenLabs, Loops, Formbricks</span>
+    <div class="links">
+      <a href="https://mintlify.com/customers" target="_blank">↗ mintlify.com/customers</a>
+      <a href="https://mintlify.com/showcase" target="_blank">↗ mintlify.com/showcase</a>
+    </div>
+  </div></td>
+  <td><div class="cell">
+    <span class="note-text">Meta, Supabase, Stripe (legacy), Algolia, Redis, Tauri, React Native, Jest, Babel, Prettier, Figma (plugins), Hasura, Palo Alto Networks, SAP, 1Password (dev docs), ByteDance, Shopify (some teams)</span>
+    <div class="links">
+      <a href="https://docusaurus.io/showcase" target="_blank">↗ docusaurus.io/showcase</a>
+    </div>
+  </div></td>
+  <td><div class="cell">
+    <span class="note-text">Zensical is early-stage; no public customer list or showcase available at this time. Verify directly with vendor for reference customers.</span>
+    <div class="links">
+      <a href="https://zensical.com" target="_blank">↗ zensical.com</a>
+    </div>
+  </div></td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+<div class="footnote">
+  <strong>Notes:</strong> Zensical is an early-stage product with limited public documentation; several "None" ratings reflect absence of documented features rather than confirmed unavailability — verify directly with the vendor. Docusaurus ratings reflect the core open-source framework; capabilities marked "Partial" are often fully achievable via the plugin ecosystem with additional engineering effort. All links verified as of April 2026.
+</div>
+
+</body>
 </html>
